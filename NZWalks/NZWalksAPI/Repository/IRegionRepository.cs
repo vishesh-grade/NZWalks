@@ -5,5 +5,6 @@ namespace NZWalksAPI.Repository
     public interface IRegionRepository
     {
         public Task<IEnumerable<Region>> GetAllAsync();
+        public Task<Region> GetAsync(Guid Id);
     }
 }
