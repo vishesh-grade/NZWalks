@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using NZWalksAPI.Models.Domain;
+using NZWalksAPI.Models.DTO;
 using NZWalksAPI.Repository;
 using System.Diagnostics;
 using System.Reflection.Metadata.Ecma335;
@@ -40,12 +42,13 @@ namespace NZWalksAPI.Controllers
             //   regionDTO.Add(regionsDTO);
             //});
 
-            var regionDTO = mapper.Map<List<Models.Domain.DTO.Region>>(regions);
+            var regionDTO = mapper.Map<List<Models.DTO.Region>>(regions);
             return ( Ok(regionDTO) );
         }
 
         [HttpGet]
         [Route("{Id:guid}")]
+        [ActionName("GetRegionById")]
         public async Task<IActionResult> GetRegionById(Guid Id)
         {
             var region = await regionRepository.GetAsync(Id);
@@ -54,13 +57,42 @@ namespace NZWalksAPI.Controllers
             {
                 return BadRequest();
             }
-            var regionDTO = mapper.Map<Models.Domain.DTO.Region>(region);
+            var regionDTO = mapper.Map<Models.DTO.Region>(region);
 
             return Ok(regionDTO);
 
         }
-               
-            
+        [HttpPost]
+
+        [Route("AddRegion")]
+        public async Task<IActionResult> Add(Models.DTO.AddRegionRequest addRegionRequest)
+        {
+            var region = new Models.Domain.Region()
+            {
+                Area = addRegionRequest.Area,
+                Long = addRegionRequest.Long,
+                Lat = addRegionRequest.Lat,
+                Population = addRegionRequest.Population,
+                Code = addRegionRequest.Code,
+                Name = addRegionRequest.Name
+            };
+
+
+            await regionRepository.AddAsync(region);
+
+            var regionDTO = new Models.Domain.Region
+            {
+                Id= region.Id,
+                Area = region.Area,
+                Long = region.Long,
+                Lat = region.Lat,
+                Population = region.Population,
+                Code = region.Code,
+                Name = region.Name
+            };
+            return CreatedAtAction(nameof(GetRegionById),new { Id = regionDTO.Id }, regionDTO);
+        }
+                           
         }
     }
 
