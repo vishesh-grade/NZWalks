@@ -78,7 +78,7 @@ namespace NZWalksAPI.Controllers
             };
 
 
-            await regionRepository.AddAsync(region);
+           await regionRepository.AddAsync(region);
 
             var regionDTO = new Models.Domain.Region
             {
@@ -92,8 +92,24 @@ namespace NZWalksAPI.Controllers
             };
             return CreatedAtAction(nameof(GetRegionById),new { Id = regionDTO.Id }, regionDTO);
         }
-                           
+
+        [HttpDelete]
+        [Route("Delete")]
+        public async Task<IActionResult> Delete(Guid Id)
+        {
+            var region = await regionRepository.DeleteAsync(Id);
+
+            if (region == null)
+            {
+                return BadRequest();
+            }
+            var regionDTO = mapper.Map<Models.DTO.Region>(region);
+
+            return Ok(regionDTO);
+
         }
+
+    }
     }
 
 
