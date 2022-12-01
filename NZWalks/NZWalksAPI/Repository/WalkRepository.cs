@@ -13,6 +13,14 @@ namespace NZWalksAPI.Repository
             this.nZWalksDbContext = nZWalksDbContext;
         }
 
+        public async Task<Walk> AddWalk(Walk walk)
+        {
+            walk.Id = Guid.NewGuid();
+           await nZWalksDbContext.Walks.AddAsync(walk);
+            await nZWalksDbContext.SaveChangesAsync();
+            return walk;
+        }
+
         public async Task<IEnumerable<Walk>> GetAllWalksAsync()
         {
             return await nZWalksDbContext.Walks.
@@ -24,7 +32,7 @@ namespace NZWalksAPI.Repository
         public async Task<Walk> GetWalkByID(Guid Id)
         {
             return await nZWalksDbContext.Walks.
-                 Include(x => x.Region).
+                Include(x => x.Region).
                 Include(x => x.WalkDifficulty).
                 FirstOrDefaultAsync(x => x.Id== Id);
         }
