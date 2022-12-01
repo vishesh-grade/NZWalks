@@ -31,10 +31,10 @@ namespace NZWalksAPI.Controllers
         [ActionName("GetWalkbyusingID")]
         public async Task<IActionResult> GetWalkbyusingID(Guid Id)
         {
-           
+
             var walk = await walkRepository.GetWalkByID(Id);
 
-            if(walk == null)
+            if (walk == null)
             {
                 return BadRequest();
             }
@@ -49,12 +49,12 @@ namespace NZWalksAPI.Controllers
         {
             var walk = new Models.Domain.Walk
             {
-                
+
                 Name = addWalkRequest.Name,
                 Length = addWalkRequest.Length,
                 RegionId = addWalkRequest.RegionId,
                 WalkDifficultyId = addWalkRequest.WalkDifficultyId,
-                
+
             };
 
             await walkRepository.AddWalk(walk);
@@ -68,6 +68,51 @@ namespace NZWalksAPI.Controllers
                 WalkDifficultyId = walk.WalkDifficultyId
             };
             return CreatedAtAction(nameof(GetWalkbyusingID), new { Id = walkDTO.Id }, walkDTO);
+        }
+
+        [HttpDelete]
+        [Route("Delete")]
+        public async Task<IActionResult> Delete(Guid Id)
+        {
+            var walk = await walkRepository.DeleteWalk(Id);
+            if (walk == null)
+            { return BadRequest(); }
+            var walkDTO = new Models.Domain.Walk
+            {
+                Id = walk.Id,
+                Name = walk.Name,
+                Length = walk.Length,
+                RegionId = walk.RegionId,
+                WalkDifficultyId = walk.WalkDifficultyId
+            };
+
+            return Ok(walkDTO);
+        }
+        [HttpPut]
+        [Route("UpdateWalk")]
+        public async Task<IActionResult> UpdateWalk(Guid Id, [FromBody] Models.DTO.UpdateWalkRequest updateWalkRequest)
+        {
+            var walk = new Models.Domain.Walk
+            {
+
+                Name = updateWalkRequest.Name,
+                Length = updateWalkRequest.Length,
+                RegionId = updateWalkRequest.RegionId,
+                WalkDifficultyId = updateWalkRequest.WalkDifficultyId,
+
+            };
+
+            await walkRepository.UpdateWalk(Id, walk);
+
+            var walkDTO = new Models.Domain.Walk
+            {
+                Id = walk.Id,
+                Name = walk.Name,
+                Length = walk.Length,
+                RegionId = walk.RegionId,
+                WalkDifficultyId = walk.WalkDifficultyId
+            };
+            return Ok(walkDTO);
         }
     }
 }
