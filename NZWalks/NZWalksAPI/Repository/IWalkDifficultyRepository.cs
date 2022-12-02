@@ -7,5 +7,11 @@ namespace NZWalksAPI.Repository
         public Task<IEnumerable<WalkDifficulty>> GetAllWalkDifficultyAsync();
 
         public Task<WalkDifficulty> GetWalkDifficultyByID(Guid Id); 
+
+        public Task<WalkDifficulty> AddWalkDifficulty(WalkDifficulty walkDifficulty);
+
+        public Task<WalkDifficulty> DeleteWalkDifficulty(Guid Id);
+
+        public Task<WalkDifficulty> UpdateWalkDifficulty(WalkDifficulty walkDifficulty , Guid Id);
     }
 }
