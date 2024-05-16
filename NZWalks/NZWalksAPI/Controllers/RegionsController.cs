@@ -9,7 +9,7 @@ using System.Reflection.Metadata.Ecma335;
 namespace NZWalksAPI.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class RegionsController : Controller
     {
         private readonly IRegionRepository regionRepository;
